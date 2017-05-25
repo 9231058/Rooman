@@ -1,5 +1,6 @@
 #include <Ethernet.h>
 #include <WebServer.h>
+#include <dht11.h>
 
 
 // Enter a MAC address and IP address for your controller below.
@@ -20,22 +21,38 @@ EthernetServer server(80);
 WebServer webserver(PREFIX, 80);
 
 
-void helloCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
+// DHT11 sensor instance
+dht11 DHT11;
+
+void statusCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
 {
 	// this line sends the standard "we're all OK" headers back to the browser
 	server.httpSuccess();
+	String response;
 
 	// if we're handling a GET or POST, we can output our data here.
 	// For a HEAD request, we just stop after outputting headers.
 	if (type != WebServer::HEAD)
 	{
-		/* this defines some HTML text in read-only memory aka PROGMEM.
-		 * This is needed to avoid having the string copied to our limited
-		 * amount of RAM. */
-		P(helloMsg) = "Hello form arduino";
+		// Read pin 2 for DHT11 temperature and humidity
+		int chk = DHT11.read(2);
+		switch (chk)
+		{
+			case DHTLIB_OK:
+				response = String((float)DHT11.temperature) + "\n" + String((float)DHT11.humidity);
+				break;
+			case DHTLIB_ERROR_CHECKSUM:
+				response = "Checksum error";
+				break;
+			case DHTLIB_ERROR_TIMEOUT:
+				response = "Time out error";
+				break;
+			default:
+				response = "Unknown error";
+				break;
+		}
 
-		/* this is a special form of print that outputs from PROGMEM */
-		server.printP(helloMsg);
+		server.print(response);
 	}
 }
 
@@ -45,7 +62,7 @@ void setup() {
 	Ethernet.begin(mac, ip);
 
 	// /hello -> helloCmd
-	webserver.addCommand("hello", &helloCmd);
+	webserver.addCommand("status", &statusCmd);
 
 	// start the webserver
 	webserver.begin();
