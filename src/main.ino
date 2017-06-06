@@ -1,6 +1,8 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_TFTLCD.h>
 #include <RTPPacket.h>
 #include <dht11.h>
 
@@ -23,17 +25,40 @@ String response;
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
 
+// TFT instance
+Adafruit_TFTLCD tft(A3, A2, A1, A0, A4);
+
+// When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
+// For the Arduino Uno, Duemilanove, Diecimila, etc.:
+//   D0 connects to digital pin 8  (Notice these are
+//   D1 connects to digital pin 9   NOT in order!)
+//   D2 connects to digital pin 2
+//   D3 connects to digital pin 3
+//   D4 connects to digital pin 4
+//   D5 connects to digital pin 5
+//   D6 connects to digital pin 6
+//   D7 connects to digital pin 7
+// For the Arduino Mega, use digital pins 22 through 29
+// (on the 2-row header at the end of the board).
+
 void setup() {
 	// start the Ethernet and UDP:
 	Ethernet.begin(mac, ip);
 	Udp.begin(1373);
 
-	Serial.begin(9600);
+	tft.reset();
+	uint16_t identifier = tft.readID();
 }
 
 void loop() {
+	// Reset screen
+	tft.fillScreen(0x0000);
+	tft.setCursor(0, 0);
+	tft.setTextColor(0xFFE0);
+	tft.setTextSize(1);
+
 	// Read pin 2 for DHT11 temperature and humidity
-	int chk = DHT11.read(2);
+	int chk = DHT11.read(10);
 	switch (chk)
 	{
 		case DHTLIB_OK:
@@ -49,6 +74,7 @@ void loop() {
 			response = "Unknown error";
 			break;
 	}
+	tft.println(response);
 
 	char __response[response.length() + 1];
 	response.toCharArray(__response, response.length() + 1);
@@ -58,5 +84,5 @@ void loop() {
 	Udp.write((const char*)packetBuffer, l);
 	Udp.endPacket();
 
-	delay(10);
+	delay(1000);
 }
