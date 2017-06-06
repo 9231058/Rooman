@@ -61,8 +61,8 @@ void loop() {
 	tft.setTextColor(0xFFE0);
 	tft.setTextSize(1);
 
-	// Read pin 0 for DHT11 temperature and humidity
-	int chk = DHT11.read(0);
+	// Read pin 2 for DHT11 temperature and humidity
+	int chk = DHT11.read(2);
 	switch (chk)
 	{
 		case DHTLIB_OK:
@@ -78,7 +78,7 @@ void loop() {
 			response = "Unknown error";
 			break;
 	}
-	//tft.println(response);
+	tft.println(response);
 
 	char __response[response.length() + 1];
 	response.toCharArray(__response, response.length() + 1);
