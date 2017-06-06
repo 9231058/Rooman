@@ -48,6 +48,7 @@ void setup() {
 
 	tft.reset();
 	uint16_t identifier = tft.readID();
+	tft.begin(identifier);
 }
 
 void loop() {
@@ -57,8 +58,8 @@ void loop() {
 	tft.setTextColor(0xFFE0);
 	tft.setTextSize(1);
 
-	// Read pin 2 for DHT11 temperature and humidity
-	int chk = DHT11.read(10);
+	// Read pin 0 for DHT11 temperature and humidity
+	int chk = DHT11.read(0);
 	switch (chk)
 	{
 		case DHTLIB_OK:
@@ -84,5 +85,5 @@ void loop() {
 	Udp.write((const char*)packetBuffer, l);
 	Udp.endPacket();
 
-	delay(1000);
+	delay(100);
 }
