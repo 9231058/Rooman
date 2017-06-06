@@ -1,5 +1,7 @@
+#include <SPI.h>
 #include <Ethernet.h>
-#include <WebServer.h>
+#include <EthernetUdp.h>
+#include <RTPPacket.h>
 #include <dht11.h>
 
 
@@ -10,70 +12,51 @@ byte mac[] = {
 };
 IPAddress ip(192, 168, 73, 9);
 
-// Initialize the Ethernet server library
-// with the IP address and port you want to use
-// (port 80 is default for HTTP):
-EthernetServer server(80);
-
-// This creates an instance of the webserver.  By specifying a prefix
-// of "", all pages will be at the root of the server.
-#define PREFIX ""
-WebServer webserver(PREFIX, 80);
-
+// RTP packet buffer
+unsigned char packetBuffer[255];
 
 // DHT11 sensor instance
 dht11 DHT11;
 
-void statusCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
-{
-	// this line sends the standard "we're all OK" headers back to the browser
-	server.httpSuccess();
-	String response;
+String response;
 
-	// if we're handling a GET or POST, we can output our data here.
-	// For a HEAD request, we just stop after outputting headers.
-	if (type != WebServer::HEAD)
-	{
-		// Read pin 2 for DHT11 temperature and humidity
-		int chk = DHT11.read(2);
-		switch (chk)
-		{
-			case DHTLIB_OK:
-				response = String((float)DHT11.temperature) + "\n" + String((float)DHT11.humidity);
-				break;
-			case DHTLIB_ERROR_CHECKSUM:
-				response = "Checksum error";
-				break;
-			case DHTLIB_ERROR_TIMEOUT:
-				response = "Time out error";
-				break;
-			default:
-				response = "Unknown error";
-				break;
-		}
-
-		server.print(response);
-	}
-}
-
+// An EthernetUDP instance to let us send and receive packets over UDP
+EthernetUDP Udp;
 
 void setup() {
-	// Initialize the Ethernet adapter
+	// start the Ethernet and UDP:
 	Ethernet.begin(mac, ip);
+	Udp.begin(1373);
 
-	// /hello -> helloCmd
-	webserver.addCommand("status", &statusCmd);
-
-	// start the webserver
-	webserver.begin();
-
+	Serial.begin(9600);
 }
 
-
 void loop() {
-	char buff[64];
-	int len = 64;
+	// Read pin 2 for DHT11 temperature and humidity
+	int chk = DHT11.read(2);
+	switch (chk)
+	{
+		case DHTLIB_OK:
+			response = String((float)DHT11.temperature) + "\n" + String((float)DHT11.humidity);
+			break;
+		case DHTLIB_ERROR_CHECKSUM:
+			response = "Checksum error";
+			break;
+		case DHTLIB_ERROR_TIMEOUT:
+			response = "Time out error";
+			break;
+		default:
+			response = "Unknown error";
+			break;
+	}
 
-	// process incoming connections one at a time forever
-	webserver.processConnection(buff, &len);
+	char __response[response.length() + 1];
+	response.toCharArray(__response, response.length() + 1);
+	int l = RTPPacket(__response, 0, 0).serialize(packetBuffer);
+
+	Udp.beginPacket(IPAddress(192, 168, 73, 255), 1373);
+	Udp.write((const char*)packetBuffer, l);
+	Udp.endPacket();
+
+	delay(10);
 }
