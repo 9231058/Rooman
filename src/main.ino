@@ -46,9 +46,12 @@ void setup() {
 	Ethernet.begin(mac, ip);
 	Udp.begin(1373);
 
+	// start serial
+	Serial.begin(9600);
+
+	// start tft lcd
 	tft.reset();
-	uint16_t identifier = tft.readID();
-	tft.begin(identifier);
+	tft.begin(0x9481);
 }
 
 void loop() {
@@ -75,7 +78,7 @@ void loop() {
 			response = "Unknown error";
 			break;
 	}
-	tft.println(response);
+	//tft.println(response);
 
 	char __response[response.length() + 1];
 	response.toCharArray(__response, response.length() + 1);
