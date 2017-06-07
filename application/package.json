@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/1995parham/Rooman/issues"
   },
-  "homepage": "https://github.com/1995parham/Rooman#readme"
+  "homepage": "https://github.com/1995parham/Rooman#readme",
+  "dependencies": {
+    "krtp": "^1.0.5"
+  }
 }
