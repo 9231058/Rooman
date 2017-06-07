@@ -17,4 +17,6 @@ s.on('message', (msg) => {
   h = parseFloat(ht.split("\n")[1]);
   console.log(t);
   console.log(h);
+  console.log(msg.timestamp);
+  console.log(msg.sequenceNumber);
 });
