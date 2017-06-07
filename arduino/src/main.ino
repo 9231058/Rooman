@@ -20,7 +20,11 @@ unsigned char packetBuffer[255];
 // DHT11 sensor instance
 dht11 DHT11;
 
+// RTP values
 String response;
+uint16_t sequenceNumber;
+uint32_t timestamp;
+uint32_t ssrc = "13731376";
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
@@ -82,11 +86,13 @@ void loop() {
 
 	char __response[response.length() + 1];
 	response.toCharArray(__response, response.length() + 1);
-	int l = RTPPacket(__response, 0, 0).serialize(packetBuffer);
+	int l = RTPPacket(__response, sequenceNumber, ssrc, timestamp).serialize(packetBuffer);
+	sequenceNumber = (sequenceNumber + 1) % (1 << 16);
+	timestamp++;
 
 	Udp.beginPacket(IPAddress(192, 168, 73, 255), 1373);
 	Udp.write((const char*)packetBuffer, l);
 	Udp.endPacket();
 
-	delay(100);
+	delay(1000);
 }
