@@ -1,0 +1,24 @@
+{
+  "name": "rooman",
+  "version": "1.0.0",
+  "description": "Room management system based on arduino",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1995parham/Rooman.git"
+  },
+  "keywords": [
+    "iot",
+    "room-manager",
+    "rtp"
+  ],
+  "author": "Parham Alvani <parham.alvani@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/1995parham/Rooman/issues"
+  },
+  "homepage": "https://github.com/1995parham/Rooman#readme"
+}
