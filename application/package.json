@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/1995parham/Rooman#readme",
   "dependencies": {
+    "express": "^4.15.3",
     "krtp": "^1.0.5"
   }
 }
