@@ -30,6 +30,12 @@ uint32_t ssrc = "13731376";
 EthernetUDP Udp;
 
 // TFT instance
+#define LCD_RD A0
+#define LCD_WR A1
+#define LCD_CD A2
+#define LCD_CS A3
+#define LCD_RESET A4
+
 Adafruit_TFTLCD tft(A3, A2, A1, A0, A4);
 
 // When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
@@ -55,6 +61,8 @@ void setup() {
 
 	// start tft lcd
 	tft.reset();
+	tft.width();
+	tft.height();
 	tft.begin(0x9481);
 }
 
@@ -64,6 +72,7 @@ void loop() {
 	tft.setCursor(0, 0);
 	tft.setTextColor(0xFFE0);
 	tft.setTextSize(1);
+	tft.println("Hello world");
 
 	// Read pin 2 for DHT11 temperature and humidity
 	int chk = DHT11.read(2);
