@@ -24,21 +24,21 @@ dht11 DHT11;
 String response;
 uint16_t sequenceNumber;
 uint32_t timestamp;
-uint32_t ssrc = "13731376";
+uint32_t ssrc = 0x13731376;
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
 
 // LiquidCrystal
-// Digital 22 DB 4
-// Digital 23 DB 5
-// Digital 24 DB 6
-// Digital 25 DB 7
-// Digital 26 RS
-// Digital 27 Enable
-// Digital 28 Backlight Control
+// Digital 4 DB4
+// Digital 5 DB5
+// Digital 6 DB6
+// Digital 7 DB7
+// Digital 8 RS
+// Digital 9 Enable
+// Digital 10 Backlight Control
 
-LiquidCrystal lcd(26, 27, 22, 23, 24, 25);
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 void setup() {
 	// start the Ethernet and UDP:
