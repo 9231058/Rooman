@@ -1,9 +1,9 @@
 #include <SPI.h>
+#include <Wire.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_TFTLCD.h>
 #include <RTPPacket.h>
+#include <LiquidCrystal.h>
 #include <dht11.h>
 
 
@@ -29,27 +29,16 @@ uint32_t ssrc = "13731376";
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
 
-// TFT instance
-#define LCD_RD A0
-#define LCD_WR A1
-#define LCD_CD A2
-#define LCD_CS A3
-#define LCD_RESET A4
+// LiquidCrystal
+// Digital 22 DB 4
+// Digital 23 DB 5
+// Digital 24 DB 6
+// Digital 25 DB 7
+// Digital 26 RS
+// Digital 27 Enable
+// Digital 28 Backlight Control
 
-Adafruit_TFTLCD tft(A3, A2, A1, A0, A4);
-
-// When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
-// For the Arduino Uno, Duemilanove, Diecimila, etc.:
-//   D0 connects to digital pin 8  (Notice these are
-//   D1 connects to digital pin 9   NOT in order!)
-//   D2 connects to digital pin 2
-//   D3 connects to digital pin 3
-//   D4 connects to digital pin 4
-//   D5 connects to digital pin 5
-//   D6 connects to digital pin 6
-//   D7 connects to digital pin 7
-// For the Arduino Mega, use digital pins 22 through 29
-// (on the 2-row header at the end of the board).
+LiquidCrystal lcd(26, 27, 22, 23, 24, 25);
 
 void setup() {
 	// start the Ethernet and UDP:
@@ -59,20 +48,14 @@ void setup() {
 	// start serial
 	Serial.begin(9600);
 
-	// start tft lcd
-	tft.reset();
-	tft.width();
-	tft.height();
-	tft.begin(0x9481);
+	// lcd
+	lcd.begin(16, 2);
+
 }
 
 void loop() {
-	// Reset screen
-	tft.fillScreen(0x0000);
-	tft.setCursor(0, 0);
-	tft.setTextColor(0xFFE0);
-	tft.setTextSize(1);
-	tft.println("Hello world");
+	// reset lcd
+	lcd.setCursor(0, 0);
 
 	// Read pin 2 for DHT11 temperature and humidity
 	int chk = DHT11.read(2);
@@ -91,7 +74,8 @@ void loop() {
 			response = "Unknown error";
 			break;
 	}
-	tft.println(response);
+	
+	lcd.print(response);
 
 	char __response[response.length() + 1];
 	response.toCharArray(__response, response.length() + 1);
