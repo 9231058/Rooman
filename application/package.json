@@ -4,7 +4,8 @@
   "description": "Room management system based on arduino",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && cross-env NODE_ENV=production webpack --config ./webpack.config.js --progress --profile --colors"
   },
   "repository": {
     "type": "git",
