@@ -26,6 +26,8 @@ s.on('message', (msg) => {
   console.log(msg.sequenceNumber);
 });
 
+app.use(express.static('dist'));
+
 app.get('/t', function (req, res) {
   res.json({
     temperature: t
