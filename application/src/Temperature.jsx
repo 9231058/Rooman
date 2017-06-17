@@ -3,17 +3,31 @@ import axios from 'axios';
 
 
 class Temperature extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {temprature: 0};
   }
 
-  fetch() {
-    axios.get('/t.json')
+  componentDidMount() {
+    setInterval(() => {
+      this.fetchTemperature();
+    }, 1000);
+  }
+
+  fetchTemperature() {
+    axios.get('/t')
       .then(res => {
-        const temperature = res.data.temperature;
-        this.setState({temperature});
+        const t = res.data.temperature;
+        this.setState({temperature: t});
       });
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.temperature}
+      </div>
+    );
   }
 }
 
