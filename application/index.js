@@ -17,29 +17,25 @@ let t = 0;
 let h = 0;
 
 s.on('message', (msg) => {
-  let ht = msg.payload.toString();
-  t = parseFloat(ht.split("\n")[0]);
-  h = parseFloat(ht.split("\n")[1]);
-  console.log(t);
-  console.log(h);
-  console.log(msg.timestamp);
-  console.log(msg.sequenceNumber);
+  const ht = msg.payload.toString();
+  t = parseFloat(ht.split('\n')[0]);
+  h = parseFloat(ht.split('\n')[1]);
 });
 
 app.use(express.static('dist'));
 
-app.get('/t', function (req, res) {
+app.get('/t', (req, res) => {
   res.json({
     temperature: t
   });
 });
 
-app.get('/h', function (req, res) {
+app.get('/h', (req, res) => {
   res.json({
     humidity: h
   });
 });
 
-app.listen(1373, function () {
-    console.log('* http on 0.0.0.0:1373')
+app.listen(1373, () => {
+    console.log('* http on 0.0.0.0:1373');
 });
