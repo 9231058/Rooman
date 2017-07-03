@@ -1,34 +1,41 @@
-import React from 'react';
-import axios from 'axios';
+import React from 'react'
+import axios from 'axios'
 
+import {LinearGauge} from 'react-canvas-gauges'
 
 class Temperature extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {temprature: 0};
+  constructor (props) {
+    super(props)
+    this.state = {temprature: 0}
   }
 
-  componentDidMount() {
+  componentDidMount () {
     setInterval(() => {
-      this.fetchTemperature();
-    }, 1000);
+      this.fetchTemperature()
+    }, 1000)
   }
 
-  fetchTemperature() {
+  fetchTemperature () {
     axios.get('/t')
       .then(res => {
-        const t = res.data.temperature;
-        this.setState({temperature: t});
-      });
+        const t = res.data.temperature
+        this.setState({temperature: t})
+      })
   }
 
-  render() {
+  render () {
     return (
       <div>
-        {this.state.temperature}
+        <LinearGauge
+          colorPlate='rgba(255,0,0,0)'
+          title='Temperature'
+          units='°C'
+          value={this.state.temperature}
+          valueBox
+        />
       </div>
-    );
+    )
   }
 }
 
-export default Temperature;
+export default Temperature
