@@ -44,9 +44,6 @@ class Temperature extends React.Component {
           title='Temperature'
           units='°C'
           value={this.state.temperature}
-          valueBox
-          valueInt={2}
-          valueDec={2}
         />
       </div>
     )
