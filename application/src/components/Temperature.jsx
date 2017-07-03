@@ -36,6 +36,7 @@ class Temperature extends React.Component {
           minValue={10}
           maxValue={50}
           majorTicks={['10', '15', '20', '25', '30', '35', '40', '45', '50']}
+          minorTicks={6}
           highlights={[
             { from: 10, to: 25, color: 'rgba(0,255,0,.15)' },
             { from: 25, to: 35, color: 'rgba(255,255,0,.15)' },
