@@ -50,12 +50,14 @@ void setup() {
 
 	// lcd
 	lcd.begin(16, 2);
-
+	lcd.clear();
+	lcd.setCursor(0, 0);
 }
 
 void loop() {
 	// reset lcd
 	lcd.setCursor(0, 0);
+	lcd.clear();
 
 	// Read pin 2 for DHT11 temperature and humidity
 	int chk = DHT11.read(2);
@@ -87,5 +89,5 @@ void loop() {
 	Udp.write((const char*)packetBuffer, l);
 	Udp.endPacket();
 
-	delay(1000);
+	delay(5000);
 }
